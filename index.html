@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Communication Assessment</title>
     <style>
         * {
@@ -44,15 +44,26 @@
             font-size: 1.1em;
         }
 
+        .controls-inline {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
         .nav-tabs {
             display: flex;
             background: #f5f5f5;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
         }
 
         .nav-tab {
-            padding: 15px 25px;
+            padding: 10px 18px;
             cursor: pointer;
             border: none;
             background: transparent;
@@ -61,6 +72,7 @@
             color: #666;
             transition: all 0.3s;
             white-space: nowrap;
+            border-radius: 8px;
         }
 
         .nav-tab:hover {
@@ -247,10 +259,25 @@
             transition: width 0.3s;
         }
 
+        .part-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:12px;
+        }
+        .small-select {
+            padding:8px 10px;
+            border-radius:6px;
+            border:1px solid #ddd;
+            background:#fff;
+        }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 1.5em; }
             .content { padding: 20px; }
             .nav-tab { padding: 12px 15px; font-size: 0.9em; }
+            .part-header { flex-direction:column; align-items:flex-start; }
         }
     </style>
 </head>
@@ -259,15 +286,32 @@
         <div class="header">
             <h1>🎯 Communication Assessment</h1>
             <p>Practice your English pronunciation with American accent</p>
+
+            <div class="controls-inline" style="margin-top:8px;">
+                <label for="voiceMode" style="color:white; font-weight:600;">Voice Mode:</label>
+                <select id="voiceMode" class="small-select" title="Choose voice mode">
+                    <option value="default">Default American</option>
+                    <option value="female_fast">Female — Fast (US)</option>
+                    <option value="female_slow">Female — Slow (US)</option>
+                    <option value="male_fast">Male — Fast (US)</option>
+                    <option value="male_slow">Male — Slow (US)</option>
+                </select>
+
+                <label for="setSelector" style="color:white; font-weight:600;">Question Set:</label>
+                <select id="setSelector" class="small-select" title="Choose set A or B">
+                    <option value="A">Set A (default)</option>
+                    <option value="B">Set B (video alt)</option>
+                </select>
+            </div>
         </div>
 
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showSection('partA')">Part A: Read</button>
-            <button class="nav-tab" onclick="showSection('partB')">Part B: Listen & Say</button>
-            <button class="nav-tab" onclick="showSection('partC')">Part C: Questions</button>
-            <button class="nav-tab" onclick="showSection('partD')">Part D: Sentence Build</button>
-            <button class="nav-tab" onclick="showSection('partE')">Part E: Stories</button>
-            <button class="nav-tab" onclick="showSection('partF')">Part F: Open Questions</button>
+        <div class="nav-tabs" role="tablist" aria-label="Sections">
+            <button class="nav-tab active" onclick="showSection('partA', event)">Part A: Read</button>
+            <button class="nav-tab" onclick="showSection('partB', event)">Part B: Listen & Say</button>
+            <button class="nav-tab" onclick="showSection('partC', event)">Part C: Questions</button>
+            <button class="nav-tab" onclick="showSection('partD', event)">Part D: Sentence Build</button>
+            <button class="nav-tab" onclick="showSection('partE', event)">Part E: Stories</button>
+            <button class="nav-tab" onclick="showSection('partF', event)">Part F: Open Questions</button>
         </div>
 
         <div class="content">
@@ -285,7 +329,17 @@
 
             <!-- Part B: Listen and Say -->
             <div id="partB" class="section">
-                <h2 style="margin-bottom: 20px; color: #333;">Part B: Listen and Say</h2>
+                <div class="part-header">
+                    <h2 style="margin-bottom: 0; color: #333;">Part B: Listen and Say (Repeat)</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label style="color:#666; font-weight:600;">Set:</label>
+                        <select id="partBSet" class="small-select" onchange="loadPartB()">
+                            <option value="A">Set A</option>
+                            <option value="B">Set B</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="progress">
                     <div class="progress-bar" id="progressB" style="width: 0%"></div>
                 </div>
@@ -294,7 +348,17 @@
 
             <!-- Part C: Questions -->
             <div id="partC" class="section">
-                <h2 style="margin-bottom: 20px; color: #333;">Part C: Quick Answer Questions</h2>
+                <div class="part-header">
+                    <h2 style="margin-bottom: 0; color: #333;">Part C: Quick Answer Questions</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label style="color:#666; font-weight:600;">Set:</label>
+                        <select id="partCSet" class="small-select" onchange="loadPartC()">
+                            <option value="A">Set A</option>
+                            <option value="B">Set B</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="progress">
                     <div class="progress-bar" id="progressC" style="width: 0%"></div>
                 </div>
@@ -303,7 +367,17 @@
 
             <!-- Part D: Sentence Build -->
             <div id="partD" class="section">
-                <h2 style="margin-bottom: 20px; color: #333;">Part D: Sentence Building</h2>
+                <div class="part-header">
+                    <h2 style="margin-bottom: 0; color: #333;">Part D: Sentence Building</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label style="color:#666; font-weight:600;">Set:</label>
+                        <select id="partDSet" class="small-select" onchange="loadPartD()">
+                            <option value="A">Set A</option>
+                            <option value="B">Set B</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="progress">
                     <div class="progress-bar" id="progressD" style="width: 0%"></div>
                 </div>
@@ -312,7 +386,17 @@
 
             <!-- Part E: Stories -->
             <div id="partE" class="section">
-                <h2 style="margin-bottom: 20px; color: #333;">Part E: Story Retellings</h2>
+                <div class="part-header">
+                    <h2 style="margin-bottom: 0; color: #333;">Part E: Story Retellings</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label style="color:#666; font-weight:600;">Set:</label>
+                        <select id="partESet" class="small-select" onchange="loadPartE()">
+                            <option value="A">Set A</option>
+                            <option value="B">Set B</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="progress">
                     <div class="progress-bar" id="progressE" style="width: 0%"></div>
                 </div>
@@ -321,7 +405,17 @@
 
             <!-- Part F: Open Questions -->
             <div id="partF" class="section">
-                <h2 style="margin-bottom: 20px; color: #333;">Part F: Open Questions</h2>
+                <div class="part-header">
+                    <h2 style="margin-bottom: 0; color: #333;">Part F: Open Questions</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <label style="color:#666; font-weight:600;">Set:</label>
+                        <select id="partFSet" class="small-select" onchange="loadPartF()">
+                            <option value="A">Set A</option>
+                            <option value="B">Set B</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="progress">
                     <div class="progress-bar" id="progressF" style="width: 0%"></div>
                 </div>
@@ -331,103 +425,163 @@
     </div>
 
     <script>
-        const partBData = [
-            "leave town on the next train",
-            "I'm feeling much better thank you",
-            "he shouldn't give you any trouble",
-            "either open the window or turn on the fan",
-            "to tell you the truth I don't really know",
-            "again and again she told herself to be brave",
-            "we could see three children playing outside",
-            "keep all items in plastic bags",
-            "during the weekend I'm going to put all the files in order",
-            "we reserved a table for 4 at 8:00 p.m.",
-            "if your family is moving out of the area please tell the office staff",
-            "the leaves used to spend their summers at the lake",
-            "you're entitled to use this product as long as you like",
-            "highly motivated people are always valued at our company",
-            "there are six basic items you should stack in your home",
-            "looking ahead The Firm will focus on new technologies",
-            "current stock prices are now available over the phone"
-        ];
+        // Two sets (A and B) for each part so user can switch "videos" / alternative sets.
+        const partBSets = {
+            A: [
+                "May I have your attention please? Someone will be with you shortly.",
+                "We are supposed to meet at 6:00.",
+                "Can you repair a flat tire?",
+                "Can't you find any tape in the drawer?",
+                "That play was really well done.",
+                "Temperature records were broken today.",
+                "The doctor I went to was really very good.",
+                "Although I didn't have any money, I went in and looked around.",
+                "I'm afraid we'll have to cancel tonight's barbecue because of the weather.",
+                "It's very enjoyable to go for a slow walk along the water.",
+                "Drink plenty of fluids and get lots of rest.",
+                "This blanket will keep you comfortable on cool nights.",
+                "After getting rid of our television, we discovered the pleasures of reading.",
+                "Scott's package includes stock options and a yearly bonus.",
+                "Let our guides take you on a trip down the Pacific coast."
+            ],
+            B: [
+                "Do you have any black thread?",
+                "Disasters can happen anytime and anywhere.",
+                "If you're tired, take a short nap.",
+                "We are supposed to meet at 6 o'clock.",
+                "Antonio is a self-taught artist.",
+                "You're not really going to call them, are you?",
+                "Read the directions carefully before opening the package.",
+                "Are these available only in green?",
+                "To catch a fish, you need to be very patient.",
+                "Second-year students are required to read all three books.",
+                "Dr Walter moved his office to 100 Garden Street.",
+                "A good polishing would have those windows looking like new.",
+                "To find out how to invest, talk to a financial specialist.",
+                "Be sure to close the windows; it might rain while you're away.",
+                "I just wanted to check in and see if there's been any progress.",
+                "Isn't she the girl we saw at the market selling flowers?"
+            ]
+        };
 
-        const partCData = [
-            {q: "If Jesse makes his living playing the piano, is he a musician or a mayor?", a: "Musician"},
-            {q: "Mrs Brown gives her children a snack after school. Does she give them a bath or food?", a: "Food / Snack"},
-            {q: "Samuel knows many words. Does he have a big government or a big vocabulary?", a: "Big vocabulary"},
-            {q: "Do people usually eat on the ceiling or at the table?", a: "Table"},
-            {q: "If something is easily breakable, is it sturdy or delicate?", a: "Delicate"},
-            {q: "Marty's peeling a vegetable that makes her eyes water. What is she peeling?", a: "Onion"},
-            {q: "The arguments are good. Are they valid or unreasonable?", a: "Valid"},
-            {q: "The change is very minor. Is it meaningful or insignificant?", a: "Insignificant"},
-            {q: "If Chris wanted to go fishing, should he go to a highway or a lake?", a: "Lake"},
-            {q: "If I take after my father, does that mean my father and I are similar or different?", a: "Similar"},
-            {q: "Science skills are emphasized. Are they important or ignored?", a: "Important"},
-            {q: "Are you more likely to find a factory in a residential or industrial part of town?", a: "Industrial"},
-            {q: "Which is easier to tie a knot: rope or meat?", a: "Rope"},
-            {q: "Amelia can't make it to her appointment. Should she cancel it or laugh at it?", a: "Cancel it"},
-            {q: "I'm reluctant to go. Am I excited or resistant?", a: "Resistant"},
-            {q: "Are paintings a type of art or a type of fire?", a: "Art"},
-            {q: "The flight departed an hour ago. It's 5:00. What time did it leave?", a: "Four / 4:00"},
-            {q: "What common substance can a person put in coffee to make it sweeter?", a: "Sugar"},
-            {q: "Are lawyers usually involved in lawsuits or landscaping?", a: "Lawsuits"},
-            {q: "Lucy has a load of laundry to do. Will she use a washing machine or a dishwasher?", a: "Washing machine"},
-            {q: "What flash of light in the sky is often followed by thunder?", a: "Lightning"},
-            {q: "How many sides does a square have?", a: "Four"},
-            {q: "To water the garden, would you use a hose or a rake?", a: "Hose"},
-            {q: "Are belts commonly worn around the waist or around the arm?", a: "Waist"}
-        ];
+        const partCSets = {
+            A: [
+                {q: "The basket is practically empty. Does it contain many or few items?", a: "Few"},
+                {q: "James bought two dozen eggs. Four broke. How many does he have left?", a: "20"},
+                {q: "If you have given up, have you quit or continued?", a: "Quit"},
+                {q: "The movies are geared toward children. Are they for grown-ups or kids?", a: "Kids"},
+                {q: "I think someone's knocking. Should I answer the phone or the door?", a: "Door"},
+                {q: "Would a child be more likely to find a slide at a playground or a library?", a: "Playground"},
+                {q: "Would the house's attic be above or below the ground floor?", a: "Above"},
+                {q: "To make the room brighter, should I turn the light on or off?", a: "On"},
+                {q: "How many moons does the Earth have?", a: "One"},
+                {q: "The charges were outrageous. Were they fair or ridiculous?", a: "Ridiculous"},
+                {q: "What flash of light in the sky is often followed by Thunder?", a: "Lightning"},
+                {q: "Travis is very knowledgeable. Is he ignorant or informed?", a: "Informed"},
+                {q: "If the meeting is delayed, will it start earlier or later than scheduled?", a: "Later"},
+                {q: "Which part of your body do you use for smelling?", a: "Nose"},
+                {q: "Are pillows soft or hard?", a: "Soft"},
+                {q: "Which is usually thicker: a finger or a leg?", a: "Leg"},
+                {q: "What joint connects the upper and lower part of the leg?", a: "Knee"},
+                {q: "If you need to wake up at 6:00 in the morning, would you set an alarm or a trap?", a: "Alarm"},
+                {q: "Benjamin is empathetic. Is he cold or caring?", a: "Caring"},
+                {q: "Do you watch the TV with your eyes closed or open?", a: "Open"},
+                {q: "When someone has a confession to make, is she going to tell a secret or a joke?", a: "A secret"},
+                {q: "Is a beautiful painting attractive or ugly?", a: "Attractive"},
+                {q: "Do we wear shoes or gloves on our hands?", a: "Gloves"},
+                {q: "The cloth completely covers the dresser. Is the dresser hidden or visible?", a: "Hidden"}
+            ],
+            B: [
+                {q: "If I delete a file, do I erase it or print it?", a: "Erase"},
+                {q: "The judge gave a lenient sentence; was it harsh or light?", a: "Light"},
+                {q: "Which tool is used to cut: a pair of scissors or a hammer?", a: "Scissors"},
+                {q: "In which season would you be most likely to see snow?", a: "Winter"},
+                {q: "In the garden, do you use flour or glue to make bread?", a: "Neither (use flour to make bread; glue used for craft)"},
+                {q: "Would you get therapy from a counsellor or an editor?", a: "Counsellor"},
+                {q: "Jean has a habit of biting his nails too much; does he bite them often or seldom?", a: "Often"},
+                {q: "Pat does four loads of laundry a week; how many does she do in two weeks?", a: "Eight"},
+                {q: "I think my leg is broken; should I tell the doctor or the policeman?", a: "Doctor"},
+                {q: "Do you wear a cap or a canyon on your head?", a: "Cap"},
+                {q: "If you are going to the theatre, will you see a play or will you see a football game?", a: "A play"},
+                {q: "The cloth completely covers the dresser; is the dresser hidden or visible?", a: "Hidden"},
+                {q: "Pete has extensive knowledge of legal terms; does he work for a clothing store or a law firm?", a: "Law firm"},
+                {q: "How many moons does the Earth have?", a: "One"},
+                {q: "To see a live performance, would it be appropriate to buy a ticket or a videotape?", a: "Buy a ticket"},
+                {q: "In the springtime, do the flowers bloom or do the birds bloom?", a: "Flowers bloom"},
+                {q: "The flight departed an hour ago. It's 5:00. What time did it leave?", a: "4:00"},
+                {q: "Does a balloon travel on land, on water, or in the air?", a: "In the air"},
+                {q: "Jordan postponed the event; is it happening sooner or later than originally planned?", a: "Later"},
+                {q: "Does a university educate or recycle students?", a: "Educate"},
+                {q: "Does a farmer usually work in the city or in the country?", a: "Country"},
+                {q: "Would you expect to find dandelions among grass or in a museum?", a: "Among grass"},
+                {q: "What sound comes after a lightning flash?", a: "Thunder"},
+                {q: "Is spaghetti a kind of pasta or a kind of spinach?", a: "Pasta"}
+            ]
+        };
 
-        const partDData = [
-            {o: "was living by himself that their only son they didn't know", c: "They didn't know that their only son was living by himself."},
-            {o: "The party around 5 starts.", c: "The party starts around 5."},
-            {o: "to visit us that she was planning. My sister said", c: "My sister said that she was planning to visit us."},
-            {o: "fairly evaluated. The teachers should be", c: "The teachers should be fairly evaluated."},
-            {o: "Her apartment outside. Wait.", c: "Wait outside her apartment."},
-            {o: "Maps required are", c: "Maps are required."},
-            {o: "accidentally deleted the results might have been", c: "The results might have been accidentally deleted."},
-            {o: "Very warm. These gloves don't keep my hands.", c: "These gloves don't keep my hands very warm."},
-            {o: "Katie will play in the concert her violin.", c: "Katie will play her violin in the concert."},
-            {o: "The snowstorm to close forced schools.", c: "The snowstorm forced schools to close."}
-        ];
+        const partDSets = {
+            A: [
+                {o: "wait / tonight / is / downstairs / the bathroom", c: ""},
+                {o: "buy food / some / maybe / some people", c: ""},
+                {o: "delayed / by the storm", c: ""},
+                {o: "under / hide / your blanket", c: ""},
+                {o: "been a problem / has never / the Little Pony", c: ""},
+                {o: "your parents / for more information / they will ask", c: ""},
+                {o: "spring bulbs / planted soon / should be", c: ""},
+                {o: "we're unwilling to help / and her assistant / the manager", c: ""},
+                {o: "we found / when Mrs Green left / her small silver ring", c: ""}
+            ],
+            B: [
+                {o: "My smokes husband", c: ""},
+                {o: "To see their friend / the little boys / wanted", c: ""},
+                {o: "Expensive houses / sell / they", c: ""},
+                {o: "To our neighbor's truck / we didn't see / what happened", c: ""},
+                {o: "To come / Martha and Sue / invited her", c: ""},
+                {o: "Sings / Mary / beautifully / a", c: ""},
+                {o: "A compliment / her comment / he considered", c: ""},
+                {o: "To help him / his aunt / didn't want", c: ""},
+                {o: "Had bought the ring / everyone wanted to know / where Chris", c: ""},
+                {o: "Would seem / a better solution / to be desirable", c: ""}
+            ]
+        };
 
-        const partEData = [
-            {
-                story: "A husband and wife went camping for the weekend. On the first day they went on a long hike in the mountains. After the hike they were very hungry. When they returned to the camp they found two bears eating their food. They decided to leave early and have dinner at a restaurant.",
-                answer: "A husband and wife went camping for the weekend. After going on a long hike in the mountains, they returned to their camp feeling very hungry. However, they found two bears eating their food. Because their food was gone, they decided to leave the campsite early and eat dinner at a restaurant instead."
-            },
-            {
-                story: "Gary was sleeping when his alarm went off. He realized it was time to go to work. He put on his clothes quickly and brushed his teeth. He ran outside and waited for the bus. He boarded the bus and rode it until he got to his office. It was only when he walked into his empty office that he realized it was a holiday and he was not required to work that day.",
-                answer: "Gary woke up to his alarm and rushed to get ready for work. He dressed quickly, brushed his teeth, and caught the bus to his office. When he arrived, he found the office empty. It was then that he realized it was a holiday, and he was not actually required to work that day."
-            },
-            {
-                story: "It is John's parents wedding anniversary. John wants to make a special dinner for them. He decides to make fish. While the fish is in the oven John's phone rings. He forgets about the fish and it burns. When his parents come home they all go out to eat in a restaurant.",
-                answer: "To celebrate his parents' wedding anniversary, John decided to cook a special fish dinner. While the fish was in the oven, John's phone rang. He got distracted by the call and forgot about the oven, causing the fish to burn. When his parents arrived, they ended up going out to a restaurant to eat."
-            }
-        ];
+        const partESets = {
+            A: [
+                {story: "The Boat Trip: Two friends went out on a lake in a small boat on a sunny day. When dark clouds rolled in, they returned to shore as fast as possible but were soaking wet by the time they reached their cabin.", answer: "Two friends took a boat trip on a sunny day. Dark clouds arrived and they hurried back to shore; they were soaked when they reached their cabin."},
+                {story: "The Bike Race: Diana and Joe trained for months for a bike race. Diana eventually won the race, beating Joe by only two seconds.", answer: "Diana and Joe trained for a bike race for months. In the race Diana won by two seconds, narrowly beating Joe."},
+                {story: "The Lost Glasses: Two sisters were playing in a big yard when the younger sister lost her glasses. After searching for a long time, the older sister found them, and they went inside for lunch.", answer: "Two sisters played outside; the younger lost her glasses. The older sister searched until she found them, and they went in for lunch."}
+            ],
+            B: [
+                {story: "A mother asks her son to take out the garbage. He ignores her to watch TV. Later, the mother finds the dog chewing the garbage bag and messes everywhere. She makes the son clean up and walk the dog.", answer: "A boy ignored his mother's request to take out the trash and watched TV. The dog got into the garbage, made a mess, and the mother made the son clean and walk the dog."},
+                {story: "Ben and his parents go to the beach. His father swims, his mother relaxes, and Ben builds a sandcastle. The father accidentally steps on the castle, making Ben sad, so they build another one together.", answer: "Ben and his parents visited the beach. Ben built a sandcastle; his father stepped on it by accident. They built another one together."},
+                {story: "Cousins visit after 10 years. They used to play in the garden and ride bikes together as children. Now that they are older, they are going to a nice restaurant.", answer: "Cousins reunited after years apart recalled playing together as kids. Now older, they planned to go to a good restaurant together."}
+            ]
+        };
 
-        const partFData = [
-            {
-                q: "What are two advantages of eating lunch together with colleagues at work?",
-                a: "There are two main advantages to eating lunch with colleagues. First, it strengthens professional relationships; by socializing in a casual setting, coworkers build trust and rapport, which improves teamwork. Second, it provides a mental break; stepping away from the desk to socialize reduces stress and helps employees return to work feeling refreshed and more productive."
-            },
-            {
-                q: "Do you prefer sending postcards or emails from a trip abroad? Explain why.",
-                a: "I prefer sending emails because they are faster and more reliable. With an email, I can attach high-quality digital photos and send them instantly to many people at once. While postcards are a nice tradition, they often take weeks to arrive or can get lost in the mail, whereas emails allow me to share my experiences with my family in real-time."
-            }
-        ];
+        const partFSets = {
+            A: [
+                {q: "Do you feel that learning about art or music is a necessary part of a good education? Why do you feel this way?", a: ""},
+                {q: "Some people think that weekends should be spent resting and relaxing, while other people prefer to use the extra time to complete work. How do you like to spend weekend time? Please explain.", a: ""}
+            ],
+            B: [
+                {q: "Describe a person who has had a large impact on your life. In what way has this person changed your life?", a: ""},
+                {q: "Do you think that a family should ever borrow money from a neighbour? Please explain with examples of such events.", a: ""}
+            ]
+        };
 
+        // recording helpers
         let currentRecorder = null;
         let recordedChunks = [];
         let currentTimer = null;
 
-        function showSection(partId) {
+        function showSection(partId, e) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            
-            document.getElementById(partId).classList.add('active');
-            event.target.classList.add('active');
 
+            document.getElementById(partId).classList.add('active');
+            if (e && e.currentTarget) e.currentTarget.classList.add('active');
+
+            // load content for parts when opened
             if (partId === 'partB') loadPartB();
             if (partId === 'partC') loadPartC();
             if (partId === 'partD') loadPartD();
@@ -448,160 +602,276 @@
             document.getElementById('recordReadBtn').disabled = false;
         }
 
+        // Loaders use selected Set (A/B)
         function loadPartB() {
+            const set = document.getElementById('partBSet').value || 'A';
+            const data = partBSets[set];
             const container = document.getElementById('partBContent');
             container.innerHTML = '';
-            
-            partBData.forEach((text, index) => {
+
+            data.forEach((text, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
+                // use data attributes and attach listener to avoid heavy escaping for inline JS
                 card.innerHTML = `
-                    <div class="question-number">Sentence ${index + 1} of ${partBData.length}</div>
+                    <div class="question-number">Sentence ${index + 1} of ${data.length}</div>
                     <div style="font-size: 1.1em; color: #666; margin-bottom: 15px;">
                         🎧 Listen carefully and repeat what you hear
                     </div>
                     <div class="answer-text" id="answer-partB-${index}">
                         <div class="answer-label">Text to repeat:</div>
-                        ${text}
+                        ${escapeHtml(text)}
                     </div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="speakText('${text.replace(/'/g, "\\'")}')">🔊 Listen</button>
-                        <button class="btn-secondary" onclick="toggleAnswer('answer-partB-${index}', this)">👁️ Show Text</button>
-                        <button class="btn-success" onclick="toggleRecording('partB-${index}')">🎤 Record Your Response</button>
+                    <div class="controls" data-text="${escapeAttr(text)}">
+                        <button class="btn-primary btn-listen">🔊 Listen</button>
+                        <button class="btn-secondary btn-toggle">👁️ Show Text</button>
+                        <button class="btn-success btn-record">🎤 Record Your Response</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            updateProgress('progressB', 0, partBData.length);
+
+            // attach delegated listeners
+            container.querySelectorAll('.controls').forEach(ctrl => {
+                const text = ctrl.getAttribute('data-text');
+                const listenBtn = ctrl.querySelector('.btn-listen');
+                const toggleBtn = ctrl.querySelector('.btn-toggle');
+                const recBtn = ctrl.querySelector('.btn-record');
+
+                listenBtn.onclick = () => speakText(text);
+                toggleBtn.onclick = () => {
+                    const answerDiv = ctrl.parentElement.querySelector('.answer-text');
+                    toggleAnswer(answerDiv.id, toggleBtn);
+                };
+                recBtn.onclick = (ev) => toggleRecordingElement(ev.currentTarget, text);
+            });
+
+            updateProgress('progressB', 0, data.length);
         }
 
         function loadPartC() {
+            const set = document.getElementById('partCSet').value || 'A';
+            const data = partCSets[set];
             const container = document.getElementById('partCContent');
             container.innerHTML = '';
-            
-            partCData.forEach((item, index) => {
+
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 card.innerHTML = `
-                    <div class="question-number">Question ${index + 1} of ${partCData.length}</div>
+                    <div class="question-number">Question ${index + 1} of ${data.length}</div>
                     <div style="font-size: 1.1em; color: #666; margin-bottom: 15px;">
                         🎧 Listen to the question and answer quickly
                     </div>
                     <div class="answer-text" id="answer-partC-${index}">
                         <div class="answer-label">Question & Answer:</div>
-                        <strong>Q:</strong> ${item.q}<br><br>
-                        <strong>A:</strong> ${item.a}
+                        <strong>Q:</strong> ${escapeHtml(item.q)}<br><br>
+                        <strong>A:</strong> ${escapeHtml(item.a)}
                     </div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="speakText('${item.q.replace(/'/g, "\\'")}')">🔊 Listen to Question</button>
-                        <button class="btn-secondary" onclick="toggleAnswer('answer-partC-${index}', this)">👁️ Show Text</button>
-                        <button class="btn-success" onclick="toggleRecording('partC-${index}')">🎤 Record Answer</button>
+                    <div class="controls" data-text="${escapeAttr(item.q)}">
+                        <button class="btn-primary btn-listen">🔊 Listen to Question</button>
+                        <button class="btn-secondary btn-toggle">👁️ Show Text</button>
+                        <button class="btn-success btn-record">🎤 Record Answer</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            updateProgress('progressC', 0, partCData.length);
+
+            container.querySelectorAll('.controls').forEach(ctrl => {
+                const text = ctrl.getAttribute('data-text');
+                const listenBtn = ctrl.querySelector('.btn-listen');
+                const toggleBtn = ctrl.querySelector('.btn-toggle');
+                const recBtn = ctrl.querySelector('.btn-record');
+
+                listenBtn.onclick = () => speakText(text);
+                toggleBtn.onclick = () => {
+                    const answerDiv = ctrl.parentElement.querySelector('.answer-text');
+                    toggleAnswer(answerDiv.id, toggleBtn);
+                };
+                recBtn.onclick = (ev) => toggleRecordingElement(ev.currentTarget, text);
+            });
+
+            updateProgress('progressC', 0, data.length);
         }
 
         function loadPartD() {
+            const set = document.getElementById('partDSet').value || 'A';
+            const data = partDSets[set];
             const container = document.getElementById('partDContent');
             container.innerHTML = '';
-            
-            partDData.forEach((item, index) => {
+
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 card.innerHTML = `
-                    <div class="question-number">Sentence ${index + 1} of ${partDData.length}</div>
+                    <div class="question-number">Sentence ${index + 1} of ${data.length}</div>
                     <div style="font-size: 1.1em; color: #666; margin-bottom: 15px;">
                         🎧 Listen to the scrambled sentence and arrange it correctly
                     </div>
                     <div class="answer-text" id="answer-partD-${index}">
-                        <strong>Scrambled:</strong> ${item.o}<br><br>
+                        <strong>Scrambled:</strong> ${escapeHtml(item.o)}<br><br>
                         <div class="answer-label">Correct Answer:</div>
-                        ${item.c}
+                        ${escapeHtml(item.c)}
                     </div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="speakText('${item.o.replace(/'/g, "\\'")}')">🔊 Listen to Scrambled</button>
-                        <button class="btn-secondary" onclick="toggleAnswer('answer-partD-${index}', this)">👁️ Show Text</button>
-                        <button class="btn-success" onclick="toggleRecording('partD-${index}')">🎤 Record Answer</button>
+                    <div class="controls" data-text="${escapeAttr(item.o)}">
+                        <button class="btn-primary btn-listen">🔊 Listen to Scrambled</button>
+                        <button class="btn-secondary btn-toggle">👁️ Show Text</button>
+                        <button class="btn-success btn-record">🎤 Record Answer</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            updateProgress('progressD', 0, partDData.length);
+
+            container.querySelectorAll('.controls').forEach(ctrl => {
+                const text = ctrl.getAttribute('data-text');
+                const listenBtn = ctrl.querySelector('.btn-listen');
+                const toggleBtn = ctrl.querySelector('.btn-toggle');
+                const recBtn = ctrl.querySelector('.btn-record');
+
+                listenBtn.onclick = () => speakText(text);
+                toggleBtn.onclick = () => {
+                    const answerDiv = ctrl.parentElement.querySelector('.answer-text');
+                    toggleAnswer(answerDiv.id, toggleBtn);
+                };
+                recBtn.onclick = (ev) => toggleRecordingElement(ev.currentTarget, text);
+            });
+
+            updateProgress('progressD', 0, data.length);
         }
 
         function loadPartE() {
+            const set = document.getElementById('partESet').value || 'A';
+            const data = partESets[set];
             const container = document.getElementById('partEContent');
             container.innerHTML = '';
-            
-            partEData.forEach((item, index) => {
+
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 card.innerHTML = `
-                    <div class="question-number">Story ${index + 1} of ${partEData.length}</div>
+                    <div class="question-number">Story ${index + 1} of ${data.length}</div>
                     <div style="font-size: 1.1em; color: #666; margin-bottom: 15px;">
                         🎧 Listen to the story carefully and retell it in 30 seconds
                     </div>
                     <div class="answer-text" id="answer-partE-${index}">
                         <div class="answer-label">Story:</div>
-                        ${item.story}<br><br>
+                        ${escapeHtml(item.story)}<br><br>
                         <div class="answer-label">Sample Retelling:</div>
-                        ${item.answer}
+                        ${escapeHtml(item.answer)}
                     </div>
                     <div class="timer" id="timer-${index}" style="display:none;">Time: 30s</div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="speakText('${item.story.replace(/'/g, "\\'")}')">🔊 Listen to Story</button>
-                        <button class="btn-secondary" onclick="toggleAnswer('answer-partE-${index}', this)">👁️ Show Text</button>
-                        <button class="btn-success" onclick="startStoryRecording(${index})">🎤 Record Retelling (30s)</button>
+                    <div class="controls" data-text="${escapeAttr(item.story)}">
+                        <button class="btn-primary btn-listen">🔊 Listen to Story</button>
+                        <button class="btn-secondary btn-toggle">👁️ Show Text</button>
+                        <button class="btn-success btn-record">🎤 Record Retelling (30s)</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            updateProgress('progressE', 0, partEData.length);
+
+            container.querySelectorAll('.controls').forEach((ctrl, idx) => {
+                const text = ctrl.getAttribute('data-text');
+                const listenBtn = ctrl.querySelector('.btn-listen');
+                const toggleBtn = ctrl.querySelector('.btn-toggle');
+                const recBtn = ctrl.querySelector('.btn-record');
+
+                listenBtn.onclick = () => speakText(text);
+                toggleBtn.onclick = () => {
+                    const answerDiv = ctrl.parentElement.querySelector('.answer-text');
+                    toggleAnswer(answerDiv.id, toggleBtn);
+                };
+                recBtn.onclick = (ev) => startStoryRecordingElement(ev.currentTarget, idx, text);
+            });
+
+            updateProgress('progressE', 0, data.length);
         }
 
         function loadPartF() {
+            const set = document.getElementById('partFSet').value || 'A';
+            const data = partFSets[set];
             const container = document.getElementById('partFContent');
             container.innerHTML = '';
-            
-            partFData.forEach((item, index) => {
+
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 card.innerHTML = `
-                    <div class="question-number">Question ${index + 1} of ${partFData.length}</div>
+                    <div class="question-number">Question ${index + 1} of ${data.length}</div>
                     <div style="font-size: 1.1em; color: #666; margin-bottom: 15px;">
-                        🎧 Listen to the question and provide a detailed answer
+                        🎧 Listen to the question and provide a detailed answer (40s)
                     </div>
                     <div class="answer-text" id="answer-partF-${index}">
                         <div class="answer-label">Question:</div>
-                        ${item.q}<br><br>
+                        ${escapeHtml(item.q)}<br><br>
                         <div class="answer-label">Sample Answer:</div>
-                        ${item.a}
+                        ${escapeHtml(item.a)}
                     </div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="speakText('${item.q.replace(/'/g, "\\'")}')">🔊 Listen to Question</button>
-                        <button class="btn-secondary" onclick="toggleAnswer('answer-partF-${index}', this)">👁️ Show Text</button>
-                        <button class="btn-success" onclick="toggleRecording('partF-${index}')">🎤 Record Answer</button>
+                    <div class="controls" data-text="${escapeAttr(item.q)}">
+                        <button class="btn-primary btn-listen">🔊 Listen to Question</button>
+                        <button class="btn-secondary btn-toggle">👁️ Show Text</button>
+                        <button class="btn-success btn-record">🎤 Record Answer (40s)</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-            updateProgress('progressF', 0, partFData.length);
+
+            container.querySelectorAll('.controls').forEach((ctrl, idx) => {
+                const text = ctrl.getAttribute('data-text');
+                const listenBtn = ctrl.querySelector('.btn-listen');
+                const toggleBtn = ctrl.querySelector('.btn-toggle');
+                const recBtn = ctrl.querySelector('.btn-record');
+
+                listenBtn.onclick = () => speakText(text);
+                toggleBtn.onclick = () => {
+                    const answerDiv = ctrl.parentElement.querySelector('.answer-text');
+                    toggleAnswer(answerDiv.id, toggleBtn);
+                };
+                recBtn.onclick = (ev) => startOpenRecordingElement(ev.currentTarget, idx, text);
+            });
+
+            updateProgress('progressF', 0, data.length);
         }
 
+        // Speech synthesis with voice mode support
         function speakText(text) {
+            if (!text) return;
             const utterance = new SpeechSynthesisUtterance(text);
+            const mode = document.getElementById('voiceMode').value || 'default';
+
+            // pick rate based on mode
+            if (mode.endsWith('_fast')) utterance.rate = 1.15;
+            else if (mode.endsWith('_slow')) utterance.rate = 0.85;
+            else utterance.rate = 0.95;
+
+            // attempt to pick voice matching en-US and gender preference
             const voices = speechSynthesis.getVoices();
-            const americanVoice = voices.find(v => v.lang === 'en-US') || voices[0];
-            utterance.voice = americanVoice;
-            utterance.rate = 0.9;
+            let selected = null;
+            const prefer = mode.startsWith('female') ? 'female' : (mode.startsWith('male') ? 'male' : null);
+
+            if (voices && voices.length) {
+                // filter en-US voices first
+                const usVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en-us'));
+                const pool = (usVoices.length ? usVoices : voices);
+
+                if (prefer === 'female') {
+                    selected = pool.find(v => /female|samantha|amy|alloy|alloy\.en|alloy/gi.test(v.name)) ||
+                               pool.find(v => /female/gi.test(v.voiceURI));
+                } else if (prefer === 'male') {
+                    selected = pool.find(v => /male|john|alex|david|daniel|matt|tom/gi.test(v.name)) ||
+                               pool.find(v => /male/gi.test(v.voiceURI));
+                }
+
+                if (!selected) selected = pool.find(v => v.lang && v.lang.toLowerCase().startsWith('en-us')) || pool[0];
+                utterance.voice = selected;
+            }
+
+            speechSynthesis.cancel(); // stop ongoing
             speechSynthesis.speak(utterance);
         }
 
-        async function toggleRecording(id) {
-            const btn = event.target;
-            
+        // Recording functions (element-based to avoid event target ambiguity)
+        async function toggleRecordingElement(btn, text) {
+            // If currently recording, stop
             if (currentRecorder && currentRecorder.state === 'recording') {
                 currentRecorder.stop();
                 btn.textContent = '🎤 Record Your Response';
@@ -613,25 +883,25 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 recordedChunks = [];
                 currentRecorder = new MediaRecorder(stream);
-                
+
                 currentRecorder.ondataavailable = e => {
                     if (e.data.size > 0) recordedChunks.push(e.data);
                 };
-                
+
                 currentRecorder.onstop = () => {
                     const blob = new Blob(recordedChunks, { type: 'audio/webm' });
                     const url = URL.createObjectURL(blob);
                     const audio = new Audio(url);
-                    
+
                     const playBtn = document.createElement('button');
                     playBtn.className = 'btn-success';
                     playBtn.textContent = '▶️ Play Recording';
                     playBtn.onclick = () => audio.play();
-                    
+
                     btn.parentElement.appendChild(playBtn);
                     stream.getTracks().forEach(track => track.stop());
                 };
-                
+
                 currentRecorder.start();
                 btn.textContent = '⏹️ Stop Recording';
                 btn.classList.add('recording');
@@ -640,39 +910,47 @@
             }
         }
 
-        async function startStoryRecording(index) {
+        function toggleRecording(id) {
+            // existing button from Part A uses string id
             const btn = event.target;
-            const timerEl = document.getElementById(`timer-${index}`);
-            
+            toggleRecordingElement(btn, '');
+        }
+
+        async function startStoryRecordingElement(btn, idx, text) {
+            // 30 seconds
+            if (!btn) return;
+            const timerEl = document.getElementById(`timer-${idx}`);
+
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 recordedChunks = [];
                 currentRecorder = new MediaRecorder(stream);
-                
+
                 currentRecorder.ondataavailable = e => {
                     if (e.data.size > 0) recordedChunks.push(e.data);
                 };
-                
+
                 currentRecorder.onstop = () => {
                     const blob = new Blob(recordedChunks, { type: 'audio/webm' });
                     const url = URL.createObjectURL(blob);
                     const audio = new Audio(url);
-                    
+
                     const playBtn = document.createElement('button');
                     playBtn.className = 'btn-success';
                     playBtn.textContent = '▶️ Play Recording';
                     playBtn.onclick = () => audio.play();
-                    
+
                     btn.parentElement.appendChild(playBtn);
                     timerEl.style.display = 'none';
                     stream.getTracks().forEach(track => track.stop());
                 };
-                
+
                 currentRecorder.start();
                 btn.disabled = true;
                 timerEl.style.display = 'block';
-                
+
                 let timeLeft = 30;
+                timerEl.textContent = `Time: ${timeLeft}s`;
                 currentTimer = setInterval(() => {
                     timeLeft--;
                     timerEl.textContent = `Time: ${timeLeft}s`;
@@ -687,13 +965,66 @@
             }
         }
 
+        async function startOpenRecordingElement(btn, idx, text) {
+            // 40 seconds
+            if (!btn) return;
+            const container = btn.parentElement;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                recordedChunks = [];
+                currentRecorder = new MediaRecorder(stream);
+
+                currentRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
+
+                currentRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const audio = new Audio(url);
+
+                    const playBtn = document.createElement('button');
+                    playBtn.className = 'btn-success';
+                    playBtn.textContent = '▶️ Play Recording';
+                    playBtn.onclick = () => audio.play();
+
+                    container.appendChild(playBtn);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                currentRecorder.start();
+                btn.disabled = true;
+
+                let timeLeft = 40;
+                const timerDisplay = document.createElement('div');
+                timerDisplay.className = 'timer';
+                timerDisplay.textContent = `Time: ${timeLeft}s`;
+                container.insertBefore(timerDisplay, btn);
+
+                currentTimer = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = `Time: ${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(currentTimer);
+                        currentRecorder.stop();
+                        btn.disabled = false;
+                        timerDisplay.remove();
+                    }
+                }, 1000);
+            } catch (err) {
+                alert('Microphone access denied. Please allow microphone access to record.');
+            }
+        }
+
+        // Utilities
         function updateProgress(id, current, total) {
-            const percent = (current / total) * 100;
+            const percent = total === 0 ? 0 : (current / total) * 100;
             document.getElementById(id).style.width = percent + '%';
         }
 
         function toggleAnswer(answerId, btn) {
             const answerDiv = document.getElementById(answerId);
+            if (!answerDiv) return;
             if (answerDiv.classList.contains('show')) {
                 answerDiv.classList.remove('show');
                 btn.textContent = '👁️ Show Text';
@@ -703,10 +1034,7 @@
             }
         }
 
-        // Load voices
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
-        }
-    </script>
-</body>
-</html>
+        // Safe escaping helpers for generated HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>\
